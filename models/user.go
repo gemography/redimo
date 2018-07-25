@@ -1,1 +1,1 @@
-// Example of a model
+package models
