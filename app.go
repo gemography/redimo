@@ -5,6 +5,7 @@ import(
   "github.com/globalsign/mgo"
   "github.com/go-redis/redis"
   "log"
+  "strings"
 )
 
 type DataStore struct {
@@ -13,6 +14,18 @@ type DataStore struct {
 
 func (ds *DataStore) getCol(colName string) *mgo.Collection {
 	return ds.session.Copy().DB("project").C("users")
+}
+
+const (
+  PROTOCOL = "mongodb://"
+	REPLICASET = "/?replicaSet="
+)
+
+func createURI() string {
+  hosts := []string{"41.79.79.212:27017", "41.79.79.212:27018", "41.79.79.212:27019"};
+  var replicaSetName = "rs0"
+  var URI = PROTOCOL + strings.Join(hosts, ",") + REPLICASET + replicaSetName
+  return URI
 }
 
 func main() {
@@ -30,9 +43,8 @@ func main() {
     } else {
       fmt.Println("Redis Connected :)")
     }
-    const url = "mongodb://41.79.79.212:27017,41.79.79.212:27018,41.79.79.212:27019/?replicaSet=rs0"
     var ds DataStore
-  	ds.session, err = mgo.Dial(url)
+  	ds.session, err = mgo.Dial(createURI())
   	if err != nil {
   		log.Fatal(err)
   	} else {
