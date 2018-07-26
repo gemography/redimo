@@ -6,6 +6,10 @@ import (
 	"log"
 )
 
+// ConnectRedis() is a function that checks if
+// Redis server is on, and it prints success image in
+// case of success and an error message is case of
+// failure.
 func ConnectRedis() {
 	var err error
 	var client *redis.Client

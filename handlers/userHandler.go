@@ -11,7 +11,7 @@ import (
 
 var client *redis.Client
 
-func HandleUsers(c *mgo.Collection, RoutineErrors chan string) {
+func listenOnPipeline(c *mgo.Collection, RoutineErrors chan string) *mgo.ChangeStream {
 	pipeline := []bson.M{}
 	ResumeToken := bson.Raw{}
 	options := mgo.ChangeStreamOptions{}
@@ -35,18 +35,22 @@ func HandleUsers(c *mgo.Collection, RoutineErrors chan string) {
 			RoutineErrors <- "error in user handler"
 		}
 	}
-	changeDoc := ChangeDocument{}
+	return changeStream
+}
 
+func HandleUsers(c *mgo.Collection, RoutineErrors chan string) {
+	var changeStream = listenOnPipeline(c, RoutineErrors)
+	changeDoc := ChangeDocument{}
 	User := User{}
 	var x interface{}
-	var e error
+	var err error
 	for {
 		for changeStream.Next(&changeDoc) {
 			changeDoc.FullDocument.Unmarshal(&User)
-			x, e = bson.Marshal(changeStream.ResumeToken())
+			x, err = bson.Marshal(changeStream.ResumeToken())
 			fmt.Printf("%+v \n", User)
-			if e != nil {
-				log.Fatal(e)
+			if err != nil {
+				log.Fatal(err)
 			}
 			client.Set("userResumeToken", x, 0)
 		}
