@@ -25,7 +25,9 @@ To add new `handlers` of new collections. You should create your model under `mo
 
 ## Installation
 `git clone https://github.com/hiddenfounders/redimo.git`
+
 `cd redimo`
+
 `go run app.go`
 
 ## Wiki
