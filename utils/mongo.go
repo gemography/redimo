@@ -16,7 +16,7 @@ func CreateURI() string {
 	return URI
 }
 
-func ConnectMongo() {
+func ConnectMongo() DataStore {
 	var ds DataStore
 	var err error
 	ds.Session, err = mgo.Dial(CreateURI())
@@ -25,4 +25,5 @@ func ConnectMongo() {
 	} else {
 		fmt.Println("MongoDB Connected :)")
 	}
+	return ds
 }

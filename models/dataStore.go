@@ -9,6 +9,6 @@ type DataStore struct {
 	Session *mgo.Session
 }
 
-func (ds *DataStore) getCol(colName string) *mgo.Collection {
+func (ds *DataStore) GetCol(colName string) *mgo.Collection {
 	return ds.Session.Copy().DB(DATABASE).C(colName)
 }
