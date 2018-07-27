@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 	"github.com/go-redis/redis"
 	"log"
 )
@@ -24,4 +26,35 @@ func ConnectRedis() {
 	} else {
 		fmt.Println("Redis Connected :)")
 	}
+}
+
+// ListenOnPipeline() is a function that takes as arguments Mongo Collection,
+//RoutineErrors and redis client, and it returns Mongo Change Stream. It listens
+// on the pipeline for any changes and it checks for ResumeToken to start from
+// it in case of previous failure.
+func ListenOnPipeline(c *mgo.Collection, RoutineErrors chan string, client *redis.Client) *mgo.ChangeStream {
+	pipeline := []bson.M{}
+	ResumeToken := bson.Raw{}
+	options := mgo.ChangeStreamOptions{}
+	token := c.Name + "ResumeToken"
+	val, err := client.Get(token).Bytes()
+	if err == redis.Nil {
+		fmt.Println("no previous resume token")
+	} else if err != nil {
+		log.Fatal(err)
+	} else {
+		err := bson.Unmarshal(val, &ResumeToken)
+		if err != nil {
+			log.Fatal(err)
+		}
+		options.ResumeAfter = &ResumeToken
+	}
+	changeStream, err := c.Watch(pipeline, options)
+	if err != nil {
+		if err := changeStream.Close(); err != nil {
+			log.Fatal(err)
+			RoutineErrors <- "error in " + c.Name + " handler"
+		}
+	}
+	return changeStream
 }

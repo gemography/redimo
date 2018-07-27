@@ -2,6 +2,7 @@ package handlers
 
 import (
 	. "../models"
+	. "../utils"
 	"fmt"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -9,37 +10,10 @@ import (
 	"log"
 )
 
-var client *redis.Client
-
-func listenOnPipeline(c *mgo.Collection, RoutineErrors chan string) *mgo.ChangeStream {
-	pipeline := []bson.M{}
-	ResumeToken := bson.Raw{}
-	options := mgo.ChangeStreamOptions{}
-	val, err := client.Get("userResumeToken").Bytes()
-	if err == redis.Nil {
-		fmt.Println("no previous resume token")
-	} else if err != nil {
-		log.Fatal(err)
-	} else {
-		err := bson.Unmarshal(val, &ResumeToken)
-		if err != nil {
-			log.Fatal(err)
-		}
-		options.ResumeAfter = &ResumeToken
-	}
-
-	changeStream, err := c.Watch(pipeline, options)
-	if err != nil {
-		if err := changeStream.Close(); err != nil {
-			log.Fatal(err)
-			RoutineErrors <- "error in user handler"
-		}
-	}
-	return changeStream
-}
-
 func HandleUsers(c *mgo.Collection, RoutineErrors chan string) {
-	var changeStream = listenOnPipeline(c, RoutineErrors)
+	var client *redis.Client
+	var changeStream = ListenOnPipeline(c, RoutineErrors, client)
+	token := c.Name + "ResumeToken"
 	changeDoc := ChangeDocument{}
 	User := User{}
 	var x interface{}
@@ -52,7 +26,7 @@ func HandleUsers(c *mgo.Collection, RoutineErrors chan string) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			client.Set("userResumeToken", x, 0)
+			client.Set(token, x, 0)
 		}
 	}
 }
