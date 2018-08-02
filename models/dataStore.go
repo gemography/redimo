@@ -1,7 +1,7 @@
 package models
 
 import (
-	. "../config"
+	. "github.com/hiddenfounders/redimo/config"
 	"github.com/globalsign/mgo"
 )
 

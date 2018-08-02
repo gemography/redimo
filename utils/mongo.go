@@ -11,10 +11,15 @@ import (
 
 // CreateURI() is a function that concatenates multiple hosts
 // to create a MongoDB valid URI for replica sets.
-func CreateURI() string {
-	hosts := []string{"41.79.79.212:27017", "41.79.79.212:27018", "41.79.79.212:27019"}
+func CreateURI(withPassword bool) string {
+	hosts := []string{"localhost:28017", "localhost:28018", "localhost:28019"}
 	var replicaSetName = "rs0"
-	var URI = PROTOCOL + strings.Join(hosts, ",") + REPLICASET + replicaSetName
+	var URI = ""
+	if withPassword {
+		URI = PROTOCOL + MGUSER + ":" + MGPASS + "@" + strings.Join(hosts, ",") + REPLICASET + replicaSetName + AUTHSOURCE + DATABASE
+	} else {
+		URI = PROTOCOL + strings.Join(hosts, ",") + REPLICASET + replicaSetName
+	}
 	return URI
 }
 
@@ -24,7 +29,8 @@ func CreateURI() string {
 func ConnectMongo() DataStore {
 	var ds DataStore
 	var err error
-	ds.Session, err = mgo.Dial(CreateURI())
+	bool withPassword = false
+	ds.Session, err = mgo.Dial(CreateURI(withPassword))
 	if err != nil {
 		log.Fatal(err)
 	} else {

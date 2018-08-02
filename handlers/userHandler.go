@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	. "../models"
-	. "../utils"
+	. "github.com/hiddenfounders/redimo/models"
+	. "github.com/hiddenfounders/redimo/utils"
 	"fmt"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -10,10 +10,9 @@ import (
 	"log"
 )
 
-func HandleUsers(c *mgo.Collection, RoutineErrors chan string) {
-	var client *redis.Client
-	var changeStream = ListenOnPipeline(c, RoutineErrors, client)
+func HandleUsers(c *mgo.Collection, RoutineErrors chan string, client *redis.Client) {
 	token := c.Name + "ResumeToken"
+	var changeStream = ListenOnPipeline(c, RoutineErrors, client, token)
 	changeDoc := ChangeDocument{}
 	User := User{}
 	var x interface{}
