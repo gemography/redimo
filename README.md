@@ -24,6 +24,11 @@ app.go
 To add new `handlers` of new collections. You should create your model under `models` and your handler under `handlers`. For more information about creating handlers for new collections please check the Wiki.
 
 ## Installation
+`go get github.com/hiddenfounders/redimo`
+
+`redimo`
+
+## Contribution
 `git clone https://github.com/hiddenfounders/redimo.git`
 
 `cd redimo`
