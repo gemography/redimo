@@ -1,10 +1,10 @@
 package utils
 
 import (
-	. "../config"
-	. "../models"
 	"fmt"
 	"github.com/globalsign/mgo"
+	. "github.com/hiddenfounders/redimo/config"
+	. "github.com/hiddenfounders/redimo/models"
 	"log"
 	"strings"
 )
@@ -29,7 +29,7 @@ func CreateURI(withPassword bool) string {
 func ConnectMongo() DataStore {
 	var ds DataStore
 	var err error
-	bool withPassword = false
+	var withPassword = false
 	ds.Session, err = mgo.Dial(CreateURI(withPassword))
 	if err != nil {
 		log.Fatal(err)

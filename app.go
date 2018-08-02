@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"github.com/go-redis/redis"
 	. "github.com/hiddenfounders/redimo/handlers"
 	. "github.com/hiddenfounders/redimo/models"
 	. "github.com/hiddenfounders/redimo/utils"
-	"fmt"
-	"github.com/go-redis/redis"
 )
 
 var client *redis.Client

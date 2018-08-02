@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	. "github.com/hiddenfounders/redimo/models"
-	. "github.com/hiddenfounders/redimo/utils"
 	"fmt"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 	"github.com/go-redis/redis"
+	. "github.com/hiddenfounders/redimo/models"
+	. "github.com/hiddenfounders/redimo/utils"
 	"log"
 )
 

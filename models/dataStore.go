@@ -1,8 +1,8 @@
 package models
 
 import (
-	. "github.com/hiddenfounders/redimo/config"
 	"github.com/globalsign/mgo"
+	. "github.com/hiddenfounders/redimo/config"
 )
 
 type DataStore struct {
