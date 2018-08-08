@@ -24,16 +24,32 @@ app.go
 To add new `handlers` of new collections. You should create your model under `models` and your handler under `handlers`. For more information about creating handlers for new collections please check the Wiki.
 
 ## Installation
-`go get github.com/hiddenfounders/redimo`
+### By Cloning the repository
+`$ git clone https://github.com/hiddenfounders/redimo.git`
 
-`redimo`
+`$ cd redimo`
 
-## Contribution
-`git clone https://github.com/hiddenfounders/redimo.git`
+### By go get
+`$ go get clone https://github.com/hiddenfounders/redimo.git`
 
-`cd redimo`
+Then go to your `$GOPATH/src/github.com/hiddenfounders/redimo`
 
-`go run app.go`
+### Configuration
+The general config file is at `config/config.go`, if you do not use username and password, just let it empty.
+
+Mongo configuration is at `utils/mongo.go`. If you are using a database with authentication, please make the boolean `withPassword = true` and add the credentials to `config/config.go`.
+
+Redis configuration is at `utils/redis.go`.
+
+### Run the application
+`$ go run app.go`
+
+`$ go build app.go && ./app`
+
+## Development
+If you want to add another handler, add the model to `models` and follow the template used in `userHandler.go` to make your own handler.
+
+The function `ListenOnPipeline()` is generic and it can be called for any model.
 
 ## Wiki
 [redis for golang] https://godoc.org/github.com/go-redis/redis
