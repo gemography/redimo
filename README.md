@@ -30,7 +30,7 @@ To add new `handlers` of new collections. You should create your model under `mo
 `$ cd redimo`
 
 ### By go get
-`$ go get clone https://github.com/hiddenfounders/redimo.git`
+`$ go get github.com/hiddenfounders/redimo`
 
 Then go to your `$GOPATH/src/github.com/hiddenfounders/redimo`
 
